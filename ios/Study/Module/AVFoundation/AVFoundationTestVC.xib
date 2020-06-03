@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AVFoundationTestVC">
+            <connections>
+                <outlet property="textView" destination="Tfi-ZZ-Kjh" id="ego-ze-gQd"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="volumeStepper" destination="URY-7x-dtP" id="HJR-cb-5nh"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="床前明月光，疑是地上霜。" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Tfi-ZZ-Kjh">
+                    <rect key="frame" x="30" y="258.5" width="315" height="150"/>
+                    <color key="backgroundColor" red="0.79215686269999996" green="0.79215686269999996" blue="0.79215686269999996" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="150" id="gUZ-8f-wvG"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Text To Speech" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ods-np-VzF">
+                    <rect key="frame" x="131" y="223.5" width="113" height="20"/>
+                    <fontDescription key="fontDescription" name="Cochin-Bold" family="Cochin" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.20000000000000001" maximumValue="1" stepValue="0.0625" translatesAutoresizingMaskIntoConstraints="NO" id="URY-7x-dtP">
+                    <rect key="frame" x="200.5" y="177.5" width="94" height="32"/>
+                    <connections>
+                        <action selector="changedVolumeStepper:" destination="-1" eventType="valueChanged" id="gh7-0P-moc"/>
+                    </connections>
+                </stepper>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="调节音量：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eg2-nz-ZLN">
+                    <rect key="frame" x="88.5" y="183.5" width="82" height="20"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" red="0.83137254900000002" green="0.1843137255" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="5E2-Lb-r3J">
+                    <rect key="frame" x="200.5" y="133" width="51" height="31"/>
+                    <connections>
+                        <action selector="hideVolumeViewAction:" destination="-1" eventType="valueChanged" id="EeM-bm-e9O"/>
+                    </connections>
+                </switch>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="隐藏音量：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cR0-Am-tr6">
+                    <rect key="frame" x="88.5" y="138.5" width="82" height="20"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" red="0.83137254900000002" green="0.1843137255" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="朗读控制" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ocx-gM-pIu">
+                    <rect key="frame" x="156" y="423" width="70" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cku-Ki-kNf">
+                    <rect key="frame" x="120" y="465" width="66" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="开始/继续"/>
+                    <connections>
+                        <action selector="startReadButtonAction:" destination="-1" eventType="touchUpInside" id="Fsi-fY-qB2"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5pC-XJ-pSQ">
+                    <rect key="frame" x="213" y="465" width="31" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="暂停"/>
+                    <connections>
+                        <action selector="pauseButtonAction:" destination="-1" eventType="touchUpInside" id="7g6-jq-svt"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Tfi-ZZ-Kjh" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="5h7-qZ-cuS"/>
+                <constraint firstItem="Tfi-ZZ-Kjh" firstAttribute="top" secondItem="Ods-np-VzF" secondAttribute="bottom" constant="15" id="61l-nx-4bp"/>
+                <constraint firstItem="Ods-np-VzF" firstAttribute="top" secondItem="eg2-nz-ZLN" secondAttribute="bottom" constant="20" id="7SF-ch-mn9"/>
+                <constraint firstItem="URY-7x-dtP" firstAttribute="centerY" secondItem="eg2-nz-ZLN" secondAttribute="centerY" id="9V2-Eb-NRw"/>
+                <constraint firstItem="5E2-Lb-r3J" firstAttribute="centerY" secondItem="cR0-Am-tr6" secondAttribute="centerY" id="JgZ-lS-2fV"/>
+                <constraint firstItem="Ods-np-VzF" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Lv4-Ox-Stj"/>
+                <constraint firstItem="URY-7x-dtP" firstAttribute="leading" secondItem="eg2-nz-ZLN" secondAttribute="trailing" constant="30" id="QZW-4N-tj9"/>
+                <constraint firstItem="Tfi-ZZ-Kjh" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Syz-U8-VCv"/>
+                <constraint firstItem="URY-7x-dtP" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" constant="60" id="cST-Cf-aXT"/>
+                <constraint firstItem="URY-7x-dtP" firstAttribute="leading" secondItem="5E2-Lb-r3J" secondAttribute="leading" id="eyH-3o-YPC"/>
+                <constraint firstItem="Tfi-ZZ-Kjh" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="gCe-wW-Szr"/>
+                <constraint firstAttribute="trailing" secondItem="Tfi-ZZ-Kjh" secondAttribute="trailing" constant="30" id="j8g-89-rF8"/>
+                <constraint firstItem="eg2-nz-ZLN" firstAttribute="leading" secondItem="cR0-Am-tr6" secondAttribute="leading" id="mzr-yv-Q5C"/>
+                <constraint firstItem="eg2-nz-ZLN" firstAttribute="top" secondItem="cR0-Am-tr6" secondAttribute="bottom" constant="25" id="vg6-uN-yvx"/>
+            </constraints>
+            <point key="canvasLocation" x="132" y="144"/>
+        </view>
+    </objects>
+</document>

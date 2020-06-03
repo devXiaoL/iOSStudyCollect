@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  Study
+
+  Created by Lang on 2019/6/4.
+  Copyright © 2019 lanbao. All rights reserved.
+*/
+
+CFBundleDisplayName = "KnowledgeSet";
+
