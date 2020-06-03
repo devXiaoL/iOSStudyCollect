@@ -58,24 +58,21 @@
                     <color key="textColor" red="0.83137254900000002" green="0.1843137255" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="朗读控制" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ocx-gM-pIu">
-                    <rect key="frame" x="156" y="423" width="70" height="21"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="朗读控制" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ocx-gM-pIu">
+                    <rect key="frame" x="152.5" y="423" width="70" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cku-Ki-kNf">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cku-Ki-kNf">
                     <rect key="frame" x="120" y="465" width="66" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="开始/继续"/>
                     <connections>
                         <action selector="startReadButtonAction:" destination="-1" eventType="touchUpInside" id="Fsi-fY-qB2"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5pC-XJ-pSQ">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5pC-XJ-pSQ">
                     <rect key="frame" x="213" y="465" width="31" height="30"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" title="暂停"/>
                     <connections>
                         <action selector="pauseButtonAction:" destination="-1" eventType="touchUpInside" id="7g6-jq-svt"/>
@@ -84,15 +81,21 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="ocx-gM-pIu" firstAttribute="top" secondItem="Tfi-ZZ-Kjh" secondAttribute="bottom" constant="14.5" id="2bf-u0-45J"/>
                 <constraint firstItem="Tfi-ZZ-Kjh" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="5h7-qZ-cuS"/>
                 <constraint firstItem="Tfi-ZZ-Kjh" firstAttribute="top" secondItem="Ods-np-VzF" secondAttribute="bottom" constant="15" id="61l-nx-4bp"/>
                 <constraint firstItem="Ods-np-VzF" firstAttribute="top" secondItem="eg2-nz-ZLN" secondAttribute="bottom" constant="20" id="7SF-ch-mn9"/>
                 <constraint firstItem="URY-7x-dtP" firstAttribute="centerY" secondItem="eg2-nz-ZLN" secondAttribute="centerY" id="9V2-Eb-NRw"/>
+                <constraint firstItem="5pC-XJ-pSQ" firstAttribute="centerY" secondItem="cku-Ki-kNf" secondAttribute="centerY" id="GwT-u4-L70"/>
                 <constraint firstItem="5E2-Lb-r3J" firstAttribute="centerY" secondItem="cR0-Am-tr6" secondAttribute="centerY" id="JgZ-lS-2fV"/>
                 <constraint firstItem="Ods-np-VzF" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Lv4-Ox-Stj"/>
                 <constraint firstItem="URY-7x-dtP" firstAttribute="leading" secondItem="eg2-nz-ZLN" secondAttribute="trailing" constant="30" id="QZW-4N-tj9"/>
+                <constraint firstItem="cku-Ki-kNf" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" constant="-34.5" id="Ryq-rL-d9l"/>
                 <constraint firstItem="Tfi-ZZ-Kjh" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Syz-U8-VCv"/>
+                <constraint firstItem="5pC-XJ-pSQ" firstAttribute="leading" secondItem="cku-Ki-kNf" secondAttribute="trailing" constant="27" id="VIe-u4-p7S"/>
                 <constraint firstItem="URY-7x-dtP" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" constant="60" id="cST-Cf-aXT"/>
+                <constraint firstItem="ocx-gM-pIu" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="dQj-oP-4BR"/>
+                <constraint firstItem="cku-Ki-kNf" firstAttribute="top" secondItem="ocx-gM-pIu" secondAttribute="bottom" constant="21" id="dRF-R5-IIj"/>
                 <constraint firstItem="URY-7x-dtP" firstAttribute="leading" secondItem="5E2-Lb-r3J" secondAttribute="leading" id="eyH-3o-YPC"/>
                 <constraint firstItem="Tfi-ZZ-Kjh" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="gCe-wW-Szr"/>
                 <constraint firstAttribute="trailing" secondItem="Tfi-ZZ-Kjh" secondAttribute="trailing" constant="30" id="j8g-89-rF8"/>

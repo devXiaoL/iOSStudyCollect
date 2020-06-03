@@ -9,7 +9,7 @@
 #import "AVFoundationTestVC.h"
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MPVolumeView.h>
-
+#import "AVAudioSessionSetup.h"
 
 
 #define volumeChangeKey @"AVSystemController_SystemVolumeDidChangeNotification"
@@ -58,6 +58,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemVolumeChanged:) name:volumeChangeKey object:nil];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     
+ 
+    [AVAudioSessionSetup SetupAudioSession];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [AVAudioSessionSetup EndAudioSession];
 }
 
 - (void)dealloc{

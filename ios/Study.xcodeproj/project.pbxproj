@@ -12,6 +12,7 @@
 		042B905E246E86E40083C308 /* LowPictureCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 042B905D246E86E40083C308 /* LowPictureCell.m */; };
 		042B9061246E870A0083C308 /* LowTestCellVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 042B9060246E870A0083C308 /* LowTestCellVC.m */; };
 		042B906324725C180083C308 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 042B906224725C180083C308 /* ExternalAccessory.framework */; };
+		0446897F2487B3F10033C849 /* AVAudioSessionSetup.m in Sources */ = {isa = PBXBuildFile; fileRef = 0446897E2487B3F10033C849 /* AVAudioSessionSetup.m */; };
 		21C7113D7543D2320C935540 /* libPods-StudyTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DA459C69DB5A92F70ED3F28 /* libPods-StudyTests.a */; };
 		3C6D05C2225F789A00EEFD94 /* WaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6D05C1225F789A00EEFD94 /* WaveView.m */; };
 		3CBB2C1B22A6BC73001C103D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3CBB2C1D22A6BC73001C103D /* InfoPlist.strings */; };
@@ -123,6 +124,8 @@
 		042B905F246E870A0083C308 /* LowTestCellVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LowTestCellVC.h; sourceTree = "<group>"; };
 		042B9060246E870A0083C308 /* LowTestCellVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LowTestCellVC.m; sourceTree = "<group>"; };
 		042B906224725C180083C308 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		0446897D2487B3F10033C849 /* AVAudioSessionSetup.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVAudioSessionSetup.h; sourceTree = "<group>"; };
+		0446897E2487B3F10033C849 /* AVAudioSessionSetup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AVAudioSessionSetup.m; sourceTree = "<group>"; };
 		04C7490F2101F48E00540A97 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		04C749102101F48E00540A97 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		340DE6560C5FE8011BBA1CB9 /* Pods-StudyUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StudyUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-StudyUITests/Pods-StudyUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -629,6 +632,8 @@
 			children = (
 				A381B9F92023025100EC616B /* AVFoundationTestVC.h */,
 				A381B9FA2023025100EC616B /* AVFoundationTestVC.m */,
+				0446897D2487B3F10033C849 /* AVAudioSessionSetup.h */,
+				0446897E2487B3F10033C849 /* AVAudioSessionSetup.m */,
 				A381B9FB2023025100EC616B /* AVFoundationTestVC.xib */,
 			);
 			path = AVFoundation;
@@ -1002,6 +1007,7 @@
 				A381B9E82022DB5B00EC616B /* XLNetRequest.m in Sources */,
 				A38A0E652022C6B800B31F43 /* main.m in Sources */,
 				A3C2E9472088967F00B052A3 /* HomeViewController.m in Sources */,
+				0446897F2487B3F10033C849 /* AVAudioSessionSetup.m in Sources */,
 				042B905B246E81290083C308 /* LowPhotoViews.m in Sources */,
 				A381B9CE2022C84C00EC616B /* ENUMMacros.m in Sources */,
 				A381B9DF2022DA5000EC616B /* FeatureListVC.m in Sources */,
