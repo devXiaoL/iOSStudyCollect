@@ -13,6 +13,7 @@
 @interface ViewController ()
 
 @property (nonatomic, strong) WaveView *waveView;
+@property (nonatomic, strong) UIImageView *imageView;
 
 @end
 
@@ -28,7 +29,15 @@
     
     self.navigationItem.title = NSLocalizedString(@"homeNavTitle", nil);
     
+    self.imageView = [[UIImageView alloc] init];
+    self.imageView.backgroundColor = [UIColor blackColor];
+     [self.view addSubview:self.imageView];
     [self.view addSubview:self.waveView];
+    
+    [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self);
+        make.width.height.mas_equalTo(100);
+    }];
     
     [self.waveView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(200);
@@ -66,6 +75,39 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setInteger:0 forKey:@"childCount"];
     [userDefaults synchronize];
+    
+    NSString *imageAddress = @"http://img0.adesk.com/download/582e6fe094e5cc3ff33b2f83";
+    [self downsample:[NSURL URLWithString:imageAddress]];
+}
+// 降低采样率
+- (void)downsample: (NSURL *)imageURL {
+    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+       CFStringRef createKeys[] = {kCGImageSourceShouldCache};
+        CFBooleanRef createValues[] = {kCFBooleanTrue};
+        CFDictionaryRef cDict = CFDictionaryCreate(CFAllocatorGetDefault(), (const void **)createKeys, (const void **)createValues, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)imageURL, cDict);
+       
+        CFStringRef dsKeys[] = {
+            kCGImageSourceCreateThumbnailFromImageAlways,
+            kCGImageSourceShouldCacheImmediately,
+            kCGImageSourceCreateThumbnailWithTransform,
+            kCGImageSourceThumbnailMaxPixelSize,
+        };
+        CFTypeRef dsValues[] = {
+            kCFBooleanTrue,
+            kCFBooleanTrue,
+            kCFBooleanTrue,
+            (const void *)200,
+        };
+        CFDictionaryRef downsampleOptions = CFDictionaryCreate(CFAllocatorGetDefault(), (const void **)dsKeys, (const void **)dsValues, 4, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        
+        CGImageRef imageRef = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions);
+        UIImage *image = [UIImage imageWithCGImage:imageRef];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.imageView.image = image;
+        });
+    });
     
     
 }
