@@ -31,12 +31,13 @@
     
     self.imageView = [[UIImageView alloc] init];
     self.imageView.backgroundColor = [UIColor blackColor];
+//    self.imageView.layer.cornerRadius
      [self.view addSubview:self.imageView];
     [self.view addSubview:self.waveView];
     
     [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self);
-        make.width.height.mas_equalTo(100);
+        make.center.equalTo(self.view);
+        make.width.height.mas_equalTo(200);
     }];
     
     [self.waveView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -82,32 +83,68 @@
 // 降低采样率
 - (void)downsample: (NSURL *)imageURL {
     
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-       CFStringRef createKeys[] = {kCGImageSourceShouldCache};
-        CFBooleanRef createValues[] = {kCFBooleanTrue};
-        CFDictionaryRef cDict = CFDictionaryCreate(CFAllocatorGetDefault(), (const void **)createKeys, (const void **)createValues, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
-        CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)imageURL, cDict);
-       
-        CFStringRef dsKeys[] = {
-            kCGImageSourceCreateThumbnailFromImageAlways,
-            kCGImageSourceShouldCacheImmediately,
-            kCGImageSourceCreateThumbnailWithTransform,
-            kCGImageSourceThumbnailMaxPixelSize,
-        };
-        CFTypeRef dsValues[] = {
-            kCFBooleanTrue,
-            kCFBooleanTrue,
-            kCFBooleanTrue,
-            (const void *)200,
-        };
-        CFDictionaryRef downsampleOptions = CFDictionaryCreate(CFAllocatorGetDefault(), (const void **)dsKeys, (const void **)dsValues, 4, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+    
+    NSString *rainPath = [[NSBundle mainBundle] pathForResource:@"rain" ofType:@"HEIC"];
+    NSData *rainData = [NSData dataWithContentsOfFile:rainPath];
+    
+//       CFStringRef createKeys[] = {kCGImageSourceShouldCache};
+//        CFBooleanRef createValues[] = {kCFBooleanTrue};
+//        CFDictionaryRef cDict = CFDictionaryCreate(CFAllocatorGetDefault(), (const void **)createKeys, (const void **)createValues, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    
+        NSDictionary *createDic = @{(__bridge NSString *)kCGImageSourceShouldCache: @YES};
+    
+//        CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)imageURL, (__bridge CFDictionaryRef)createDic);
+        CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)rainData,  NULL);
         
-        CGImageRef imageRef = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions);
+       
+    
+        NSDictionary *properties = (__bridge NSDictionary *)CGImageSourceCopyProperties(imageSource, NULL);
+        NSUInteger fileSize = [properties[(__bridge NSString *)kCGImagePropertyFileSize] unsignedIntegerValue]; // 没什么用的文件大小
+        NSString *type = (__bridge_transfer NSString *)CGImageSourceGetType(imageSource);
+    
+    NSMutableDictionary *propertiesDic = [properties mutableCopy];
+
+    NSMutableDictionary *exifDic =[[propertiesDic objectForKey:(NSString*)kCGImagePropertyExifDictionary]mutableCopy];
+
+    
+    // 图片元数据
+    CGImageMetadataRef metaRef = CGImageSourceCopyMetadataAtIndex(imageSource, 0, NULL);
+    
+    CGMutableImageMetadataRef mutableMetadata = CGImageMetadataCreateMutableCopy(metaRef);
+    
+    // 图片元数据数组
+    NSArray *metaArr = (__bridge NSArray *)CGImageMetadataCopyTags(metaRef);
+    NSDictionary *exifProperties = properties[(__bridge NSString *)kCGImagePropertyExifDictionary]; // EXIF信息
+        NSString *exifCreateTime = exifProperties[(__bridge NSString *)kCGImagePropertyExifDateTimeOriginal]; // EXIF拍摄时间
+    
+//        CFStringRef dsKeys[] = {
+//                   kCGImageSourceCreateThumbnailFromImageAlways,
+//                   kCGImageSourceShouldCacheImmediately,
+//                   kCGImageSourceCreateThumbnailWithTransform,
+//                   kCGImageSourceThumbnailMaxPixelSize,
+//               };
+//               CFTypeRef dsValues[] = {
+//                   kCFBooleanTrue,
+//                   kCFBooleanTrue,
+//                   kCFBooleanTrue,
+//                   (const void *)200,
+//               };
+    
+//        CFDictionaryRef downsampleOptions = CFDictionaryCreate(CFAllocatorGetDefault(), (const void **)dsKeys, (const void **)dsValues, 4, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        
+        NSDictionary *downsampleOptions = @{
+            (__bridge NSString *)kCGImageSourceCreateThumbnailFromImageAlways: @YES,
+            (__bridge NSString *)kCGImageSourceShouldCacheImmediately: @YES,
+            (__bridge NSString *)kCGImageSourceCreateThumbnailWithTransform: @YES,
+            (__bridge NSString *)kCGImageSourceThumbnailMaxPixelSize: @400
+        };
+        CGImageRef imageRef = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, (__bridge CFDictionaryRef)downsampleOptions);
         UIImage *image = [UIImage imageWithCGImage:imageRef];
         dispatch_async(dispatch_get_main_queue(), ^{
             self.imageView.image = image;
         });
-    });
+//    });
     
     
 }

@@ -13,6 +13,7 @@
 		042B9061246E870A0083C308 /* LowTestCellVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 042B9060246E870A0083C308 /* LowTestCellVC.m */; };
 		042B906324725C180083C308 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 042B906224725C180083C308 /* ExternalAccessory.framework */; };
 		0446897F2487B3F10033C849 /* AVAudioSessionSetup.m in Sources */ = {isa = PBXBuildFile; fileRef = 0446897E2487B3F10033C849 /* AVAudioSessionSetup.m */; };
+		04DC4ACB24C5439E0025946C /* rain.HEIC in Resources */ = {isa = PBXBuildFile; fileRef = 04DC4ACA24C5439E0025946C /* rain.HEIC */; };
 		21C7113D7543D2320C935540 /* libPods-StudyTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DA459C69DB5A92F70ED3F28 /* libPods-StudyTests.a */; };
 		3C6D05C2225F789A00EEFD94 /* WaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C6D05C1225F789A00EEFD94 /* WaveView.m */; };
 		3CBB2C1B22A6BC73001C103D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3CBB2C1D22A6BC73001C103D /* InfoPlist.strings */; };
@@ -128,6 +129,7 @@
 		0446897E2487B3F10033C849 /* AVAudioSessionSetup.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AVAudioSessionSetup.m; sourceTree = "<group>"; };
 		04C7490F2101F48E00540A97 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		04C749102101F48E00540A97 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		04DC4ACA24C5439E0025946C /* rain.HEIC */ = {isa = PBXFileReference; lastKnownFileType = file; path = rain.HEIC; sourceTree = "<group>"; };
 		340DE6560C5FE8011BBA1CB9 /* Pods-StudyUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StudyUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-StudyUITests/Pods-StudyUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3C6D05C0225F789A00EEFD94 /* WaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveView.h; sourceTree = "<group>"; };
 		3C6D05C1225F789A00EEFD94 /* WaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveView.m; sourceTree = "<group>"; };
@@ -515,6 +517,7 @@
 		A381B9D52022D8E000EC616B /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				04DC4ACA24C5439E0025946C /* rain.HEIC */,
 				A3B0D0DD207F5FD500CCBB16 /* ci.db */,
 				A3B0D0D7207F400900CCBB16 /* chinese-poetry.db */,
 				A38A0E5E2022C6B800B31F43 /* Assets.xcassets */,
@@ -864,6 +867,7 @@
 			files = (
 				3CBB2C3122AB84A8001C103D /* XLImageOperationVC.xib in Resources */,
 				3CC97E652288136900E7B065 /* EventHandlingVC.xib in Resources */,
+				04DC4ACB24C5439E0025946C /* rain.HEIC in Resources */,
 				A3B0D0DE207F5FD500CCBB16 /* ci.db in Resources */,
 				3CBB2C2122A6C028001C103D /* Localizable.strings in Resources */,
 				A1A1755B21F6EAF0001ACF14 /* ScanAppViewController.xib in Resources */,
