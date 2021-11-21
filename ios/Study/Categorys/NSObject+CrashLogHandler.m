@@ -10,4 +10,8 @@
 
 @implementation NSObject (CrashLogHandler)
 
+- (void)test {
+    NSLog(@"NSObject+CrashLogHandler.h");
+}
+
 @end

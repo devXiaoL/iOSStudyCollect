@@ -57,6 +57,16 @@
                ReferencedContainer = "container:Study.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "3CFAC7262723222E000FD30D"
+               BuildableName = "XLStaticLibrary01Tests.xctest"
+               BlueprintName = "XLStaticLibrary01Tests"
+               ReferencedContainer = "container:Study.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -79,6 +89,13 @@
             ReferencedContainer = "container:Study.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OBJC_DISABLE_TAG_OBFUSCATION"
+            value = "YES"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

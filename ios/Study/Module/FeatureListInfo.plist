@@ -4,11 +4,51 @@
 <array>
 	<dict>
 		<key>title</key>
+		<string>Flutter</string>
+		<key>detail</key>
+		<string>Add Flutter to existing app</string>
+		<key>targetVC</key>
+		<string>FlutterDemo</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>ReactNative</string>
+		<key>detail</key>
+		<string>ReactNative混合开发</string>
+		<key>targetVC</key>
+		<string>RNPageVC</string>
+	</dict>
+	<dict>
+		<key>title</key>
 		<string>WKWebView</string>
 		<key>detail</key>
 		<string>学习WKWebView的基本使用</string>
 		<key>targetVC</key>
-		<string>WKWebViewTestVC</string>
+		<string>WKWebViewDemo</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Multi Thread</string>
+		<key>detail</key>
+		<string>多线程相关</string>
+		<key>targetVC</key>
+		<string>ThreadStudy</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>内存管理</string>
+		<key>detail</key>
+		<string>@autorelease</string>
+		<key>targetVC</key>
+		<string>MemoryDemoVC</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Crash</string>
+		<key>detail</key>
+		<string>内存泄漏、bad access 等</string>
+		<key>targetVC</key>
+		<string>CrashTestVC</string>
 	</dict>
 	<dict>
 		<key>title</key>
@@ -49,6 +89,14 @@
 		<string>cell中包含大量的圆形图标，练习提高图片的显示性能</string>
 		<key>targetVC</key>
 		<string>LowTestCellVC</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>事件响应链</string>
+		<key>detail</key>
+		<string>事件响应链 hitTest</string>
+		<key>targetVC</key>
+		<string>EventHandlingVC</string>
 	</dict>
 	<dict>
 		<key>title</key>
@@ -108,14 +156,6 @@
 	</dict>
 	<dict>
 		<key>title</key>
-		<string>事件响应链</string>
-		<key>detail</key>
-		<string>事件响应链</string>
-		<key>targetVC</key>
-		<string>XLResponderVC</string>
-	</dict>
-	<dict>
-		<key>title</key>
 		<string>FMDB</string>
 		<key>detail</key>
 		<string>FMDB</string>
@@ -145,22 +185,6 @@
 		<string>点击Cell之后改变cell的高度</string>
 		<key>targetVC</key>
 		<string>TableViewCellTestVC</string>
-	</dict>
-	<dict>
-		<key>title</key>
-		<string>事件响应链</string>
-		<key>detail</key>
-		<string>事件响应链 hitTest</string>
-		<key>targetVC</key>
-		<string>EventHandlingVC</string>
-	</dict>
-	<dict>
-		<key>title</key>
-		<string>ReactNative</string>
-		<key>detail</key>
-		<string>ReactNative混合开发</string>
-		<key>targetVC</key>
-		<string>RNPageVC</string>
 	</dict>
 	<dict>
 		<key>title</key>

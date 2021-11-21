@@ -11,6 +11,10 @@
 #import <SystemConfiguration/CaptiveNetwork.h>
 #import <CoreLocation/CoreLocation.h>
 
+#import <ifaddrs.h>
+#import <arpa/inet.h>
+#import <net/if.h>
+
 static NSString *cellIdentifier = @"systemInfo";
 
 @interface SystemInfoVC ()<UITableViewDataSource,UITableViewDelegate, CLLocationManagerDelegate>
@@ -18,6 +22,9 @@ static NSString *cellIdentifier = @"systemInfo";
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, copy) NSMutableArray *rowData;
 @property (nonatomic, strong) CLLocationManager *locationManager;
+
+@property (nonatomic, assign)long long int lastBytes;
+@property (nonatomic, assign)BOOL isFirstRate;
 
 @end
 
@@ -41,6 +48,8 @@ static NSString *cellIdentifier = @"systemInfo";
     self.locationManager.distanceFilter = kCLDistanceFilterNone;
     // 开始定位
     [self.locationManager startUpdatingLocation];
+    
+    self.lastBytes = 0;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -68,7 +77,7 @@ static NSString *cellIdentifier = @"systemInfo";
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-     [self settingTableViewDataSource:tableView cell:cell indexPath:indexPath];
+    [self settingTableViewDataSource:tableView cell:cell indexPath:indexPath];
 }
 
 #pragma mark - Delegate
@@ -82,7 +91,7 @@ static NSString *cellIdentifier = @"systemInfo";
     //    cell.textLabel.font = [UIFont systemFontOfSize:12];
     //    cell.detailTextLabel.font = [UIFont systemFontOfSize:11];
     cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-
+    
     NSDictionary *rowData = self.rowData[indexPath.row];
     cell.textLabel.text = rowData[@"title"];
     cell.detailTextLabel.text = rowData[@"value"];
@@ -104,7 +113,7 @@ static NSString *cellIdentifier = @"systemInfo";
 
 - (void)createRowData {
     NSString *systemName = [NSString stringWithFormat:@"%@,%@", [[UIDevice currentDevice] systemName],
-                        [[UIDevice currentDevice] localizedModel]];
+                            [[UIDevice currentDevice] localizedModel]];
     [self.rowData addObject:@{@"title": @"系统", @"value": systemName}];
     
     NSString *systemVersion = [[UIDevice currentDevice] systemVersion];
@@ -117,12 +126,13 @@ static NSString *cellIdentifier = @"systemInfo";
     [self.rowData addObject:@{@"title": @"是否使用代理", @"value": isProxy}];
     
     NSDictionary *ssidInfo = [self fetchSSIDInfo];
-//    BSSID = "60:da:83:87:4b:80";
-//    SSID = GZQ;
-    [self.rowData addObject:@{@"title": @"SSID", @"value": ssidInfo[@"SSID"]}];
-    [self.rowData addObject:@{@"title": @"BSSID", @"value": ssidInfo[@"BSSID"]}];
-    
-     [self.rowData addObject:@{@"title": @"Location", @"value": @"定位中"}];
+    if (ssidInfo) {
+        [self.rowData addObject:@{@"title": @"SSID", @"value": ssidInfo[@"SSID"]}];
+        [self.rowData addObject:@{@"title": @"BSSID", @"value": ssidInfo[@"BSSID"]}];
+    }
+    //    BSSID = "60:da:83:87:4b:80";
+    //    SSID = GZQ;
+    [self.rowData addObject:@{@"title": @"Location", @"value": @"定位中"}];
 }
 
 - (NSString *)iphoneType{
@@ -191,8 +201,10 @@ static NSString *cellIdentifier = @"systemInfo";
 
 
 - (id)fetchSSIDInfo {
+    // 参考链接：(iOS中获取WiFi的SSID)[https://www.jianshu.com/p/1e10b927c2ca]
+    
     // (__bridge_transfer id)  ==  CFBridgingRelease
-//    NSArray *ifs = (__bridge_transfer id)CNCopySupportedInterfaces();
+    //    NSArray *ifs = (__bridge_transfer id)CNCopySupportedInterfaces();
     NSArray *ifs = CFBridgingRelease(CNCopySupportedInterfaces());
     NSLog(@"Supported interfaces: %@", ifs);
     id info = nil;
@@ -204,15 +216,88 @@ static NSString *cellIdentifier = @"systemInfo";
     return info;
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+- (long long) getInterfaceBytes {
+    
+    struct ifaddrs *ifa_list = 0, *ifa;
+    
+    if (getifaddrs(&ifa_list) == -1) {
+        return 0;
+    }
+    
+    uint32_t iBytes = 0;//下行
+    
+    uint32_t oBytes = 0;//上行
+    
+    for (ifa = ifa_list; ifa; ifa = ifa->ifa_next) {
+        
+        if (AF_LINK != ifa->ifa_addr->sa_family){
+            continue;
+        }
+        
+        if (!(ifa->ifa_flags & IFF_UP) && !(ifa->ifa_flags & IFF_RUNNING)) {
+            continue;
+        }
+        if (ifa->ifa_data == 0) {
+                continue;
+        }
+        
+        /* Not a loopback device. */
+        
+        if (strncmp(ifa->ifa_name, "lo", 2)) {
+            
+            struct if_data *if_data = (struct if_data *)ifa->ifa_data;
+            
+            iBytes += if_data->ifi_ibytes;
+            
+            oBytes += if_data->ifi_obytes;
+        }
+    }
+    
+    freeifaddrs(ifa_list);
+    
+    NSLog(@"\n[getInterfaceBytes-Total]%d,%d",iBytes,oBytes);
+    
+    return iBytes;
+}
+
+- (void)getInternetface {
+    
+    long long int rate;
+    
+    long long int currentBytes = [self getInterfaceBytes];
+    
+    rate = currentBytes -self.lastBytes;
+    
+    //保存上一秒的下行总流量
+    self.lastBytes= [self getInterfaceBytes];
+    
+    //格式化一下
+    NSString*rateStr = [self formatNetWork:rate];
+    
+    NSLog(@"当前网速%@",rateStr);
+    
+    //    NSLog(@"hehe:%lld",hehe/1024/1024);
+    
+}
+
+- (NSString*)formatNetWork:(long long int)rate {
+    
+    if(rate <1024) {
+        
+        return[NSString stringWithFormat:@"%lldB/秒", rate];
+        
+    }else if(rate >=1024&& rate <1024*1024) {
+        
+        return[NSString stringWithFormat:@"%.1fKB/秒", (double)rate /1024];
+        
+    }else if(rate >=1024*1024 && rate <1024*1024*1024){
+        
+        return[NSString stringWithFormat:@"%.2fMB/秒", (double)rate / (1024*1024)];
+        
+    }else{
+        return@"10Kb/秒";
+    };
+}
 
 
 - (NSMutableArray *)rowData {

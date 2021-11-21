@@ -46,6 +46,11 @@ static NSInteger const kMARGIN = 2;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // 从导航栏下开始布局
+    // 方法1
+    // self.edgesForExtendedLayout = UIRectEdgeNone;
+    // 方法2
+    self.navigationController.navigationBar.translucent = NO; // 设置导航栏是否透明
     
     self.navigationItem.title = @"壁纸";
     
@@ -74,7 +79,7 @@ static NSInteger const kMARGIN = 2;
     [self.view addSubview:self.contentScrollView];
     [self.view addSubview:self.titlesView];
     
-    
+
     [self addChildViewController:self.categoryVC];
     [self addChildViewController:self.latestPicVC];
     [self addChildViewController:self.hotPicVC];
@@ -185,6 +190,7 @@ static NSInteger const kMARGIN = 2;
         }
         _contentScrollView.delegate = self;
         _contentScrollView.bounces = NO;
+        _contentScrollView.showsHorizontalScrollIndicator = NO;
         _contentScrollView.alwaysBounceVertical = NO;
         _contentScrollView.pagingEnabled = YES;
         _contentScrollView.backgroundColor = [UIColor blueColor];
@@ -204,7 +210,11 @@ static NSInteger const kMARGIN = 2;
 - (void)pageViewLayoutSubviews{
     
     [self.titlesView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view).with.offset(0);
+        if (@available(iOS 11.0, *)) {
+            make.top.equalTo(self.view.mas_safeAreaLayoutGuideTop);
+        } else {
+            make.top.equalTo(self.view).with.offset(0);
+        }
         make.left.right.equalTo(self.view).with.offset(0);
         make.height.mas_equalTo(40);
     }];
@@ -215,7 +225,8 @@ static NSInteger const kMARGIN = 2;
     
     [self.contentScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.titlesView.mas_bottom).offset(0);
-        make.left.bottom.right.equalTo(self.view);
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo(self.view);
     }];
 }
 
@@ -228,7 +239,6 @@ static NSInteger const kMARGIN = 2;
     self.latestPicVC.view.frame = CGRectMake(kScreenWidth, 0, kScreenWidth, self.view.mj_h-40);
     self.hotPicVC.view.frame = CGRectMake(kScreenWidth*2, 0, kScreenWidth, self.view.mj_h-40);
 }
-
 
 
 @end

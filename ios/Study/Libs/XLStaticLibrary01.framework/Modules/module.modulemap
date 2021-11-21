@@ -1,0 +1,6 @@
+framework module XLStaticLibrary01 {
+  umbrella header "XLStaticLibrary01.h"
+
+  export *
+  module * { export * }
+}

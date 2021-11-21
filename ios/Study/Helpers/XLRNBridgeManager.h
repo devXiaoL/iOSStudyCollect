@@ -7,17 +7,27 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <React/RCTBridge.h>
+//#import <React/RCTBridge.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface XLRNBridgeManager : RCTBridge
+//@interface XLRNBridgeManager : RCTBridge
+//
+//+ (instancetype)sharedManager;
+//
+//@end
+//
+//@interface BridgeHandler : NSObject <RCTBridgeDelegate>
+//
+//@end
+
+@interface XLRNBridgeManager : NSObject
 
 + (instancetype)sharedManager;
 
 @end
 
-@interface BridgeHandler : NSObject <RCTBridgeDelegate>
+@interface BridgeHandler : NSObject
 
 @end
 

@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) WaveView *waveView;
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, assign) NSInteger value;
 
 @end
 
@@ -21,6 +22,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.value = 10;
+    
+    [self addObserver:self forKeyPath:@"value" options:NSKeyValueObservingOptionNew context:nil];
     
     CGFloat statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
     NSLog(@"statusBarHeight %f",statusBarHeight);
@@ -35,8 +40,8 @@
     [self.view addSubview:self.waveView];
     
     [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self);
-        make.width.height.mas_equalTo(100);
+        make.center.equalTo(self.view);
+        make.width.height.mas_equalTo(200);
     }];
     
     [self.waveView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -82,31 +87,58 @@
 // 降低采样率
 - (void)downsample: (NSURL *)imageURL {
     
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-       CFStringRef createKeys[] = {kCGImageSourceShouldCache};
-        CFBooleanRef createValues[] = {kCFBooleanTrue};
-        CFDictionaryRef cDict = CFDictionaryCreate(CFAllocatorGetDefault(), (const void **)createKeys, (const void **)createValues, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    NSData *beforeData = [[NSData alloc] initWithContentsOfURL:imageURL];
+    NSLog(@"beforeData length = %ld", beforeData.length);
+
+    // 异步解码，采样
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        
+//       CFStringRef createKeys[] = {
+//           kCGImageSourceShouldCache
+//       };
+//        CFBooleanRef createValues[] = {
+//            kCFBooleanTrue
+//        };
+//        CFDictionaryRef cDict = CFDictionaryCreate(CFAllocatorGetDefault(), (const void **)createKeys, (const void **)createValues, 1, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        
+        CFDictionaryRef cDict = (__bridge CFDictionaryRef)@{(id)kCGImageSourceShouldCache: @YES};
+        
         CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)imageURL, cDict);
        
-        CFStringRef dsKeys[] = {
-            kCGImageSourceCreateThumbnailFromImageAlways,
-            kCGImageSourceShouldCacheImmediately,
-            kCGImageSourceCreateThumbnailWithTransform,
-            kCGImageSourceThumbnailMaxPixelSize,
+//        CFStringRef dsKeys[] = {
+//            kCGImageSourceCreateThumbnailFromImageAlways,
+//            kCGImageSourceShouldCacheImmediately,
+//            kCGImageSourceCreateThumbnailWithTransform,
+//            kCGImageSourceThumbnailMaxPixelSize,
+//        };
+//        CFTypeRef dsValues[] = {
+//            kCFBooleanTrue,
+//            kCFBooleanTrue,
+//            kCFBooleanTrue,
+//            (__bridge CFNumberRef)@400,
+//        };
+//        CFDictionaryRef downsampleOptions = CFDictionaryCreate(CFAllocatorGetDefault(), (const void **)dsKeys, (const void **)dsValues, 4, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+        
+        CFDictionaryRef downsampleOptions = (__bridge CFDictionaryRef)@{
+            (id)kCGImageSourceCreateThumbnailFromImageAlways: @YES,
+            (id)kCGImageSourceShouldCacheImmediately: @YES,
+            (id)kCGImageSourceCreateThumbnailWithTransform: @YES,
+            (id)kCGImageSourceThumbnailMaxPixelSize: @(400),
         };
-        CFTypeRef dsValues[] = {
-            kCFBooleanTrue,
-            kCFBooleanTrue,
-            kCFBooleanTrue,
-            (const void *)200,
-        };
-        CFDictionaryRef downsampleOptions = CFDictionaryCreate(CFAllocatorGetDefault(), (const void **)dsKeys, (const void **)dsValues, 4, &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
         
         CGImageRef imageRef = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions);
         UIImage *image = [UIImage imageWithCGImage:imageRef];
+        
+//        CFRelease(cDict);
+//        CFRelease(imageSource);
+//        CFRelease(downsampleOptions);
+        
+        // 回到主线程
         dispatch_async(dispatch_get_main_queue(), ^{
             self.imageView.image = image;
         });
+        
+        NSLog(@"afterData length = %ld", [UIImageJPEGRepresentation(image, 1) length]);
     });
     
     
@@ -149,6 +181,16 @@
     return  [numberFormatter stringFromNumber:[NSNumber numberWithFloat:floatV]];
 }
 
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    self.value = 10;
+}
+
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    
+    NSLog(@"object = %@, change = %@", object, change);
+}
 
 - (WaveView *)waveView{
     if (!_waveView) {

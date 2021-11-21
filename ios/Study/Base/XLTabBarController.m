@@ -21,10 +21,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self addChildVC:[ViewController new]
-               title:@""
-         normalImage:@"tabBar_home_normal"
-       selectedImage:@"tabBar_home_press"];
+//    [self addChildVC:[ViewController new]
+//               title:@""
+//         normalImage:@"tabBar_home_normal"
+//       selectedImage:@"tabBar_home_press"];
     
     [self addChildVC:[FeatureListVC new]
                title:@"功能"

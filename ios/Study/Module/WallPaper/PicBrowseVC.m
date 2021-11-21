@@ -160,7 +160,7 @@ static NSInteger const kImageViewTag = 1081;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    cell.contentView.backgroundColor = [UIColor whiteColor];
+    cell.contentView.backgroundColor = [UIColor blackColor];
     
     UIScrollView *scrollView = [cell.contentView viewWithTag:1080];
     if (!scrollView) {
@@ -182,7 +182,7 @@ static NSInteger const kImageViewTag = 1081;
     UIImageView *imageView = [scrollView viewWithTag:1081];
     if (!imageView) {
         imageView = [[UIImageView alloc]initWithFrame:scrollView.bounds];
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.tag = 1081;
         [scrollView addSubview:imageView];
     }
@@ -376,32 +376,52 @@ static NSInteger const kImageViewTag = 1081;
     //保存到自定义相册
     // 0.判断状态
     PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
-    if (status == PHAuthorizationStatusDenied ||
-        status == PHAuthorizationStatusNotDetermined) {
-        NSLog(@"用户拒绝当前应用访问相册,我们需要提醒用户打开访问开关");
-        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-            ////            NSLog(@"status = %@",status);
-            UIAlertController *alertCon = [UIAlertController alertControllerWithTitle:nil message:@"打开照片访问权限，以便保存图片到相册中" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *ok = [UIAlertAction actionWithTitle:@"好的" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {}];
-            UIAlertAction *setting = [UIAlertAction actionWithTitle:@"设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                NSURL *settingUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-                if ([[UIApplication sharedApplication] canOpenURL:settingUrl]) {
-                    [[UIApplication sharedApplication] openURL:settingUrl];
-                }
+    
+    [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+        NSLog(@"status = %zd",status);
+        
+        if (status == PHAuthorizationStatusDenied ||
+            status == PHAuthorizationStatusNotDetermined) {
+    
+            NSLog(@"用户拒绝当前应用访问相册,我们需要提醒用户打开访问开关");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentAlert];
+            });
+            
+        } else if (status == PHAuthorizationStatusRestricted){
+            
+            NSLog(@"家长控制,不允许访问");
+            
+        }else if (status == PHAuthorizationStatusNotDetermined){
+            
+            NSLog(@"用户还没有做出选择");
+            
+        }else if (status == PHAuthorizationStatusAuthorized){
+            
+            NSLog(@"用户允许当前应用访问相册");
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self saveImage:image];
+            });
+        }
+    }];
+}
+
+- (void)presentAlert {
+    UIAlertController *alertCon = [UIAlertController alertControllerWithTitle:@"温馨提示" message:@"需要打开照片访问权限，才能将图片保存到相册中" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {}];
+    UIAlertAction *setting = [UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSURL *settingUrl = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([[UIApplication sharedApplication] canOpenURL:settingUrl]) {
+            [[UIApplication sharedApplication] openURL:settingUrl options:@{} completionHandler:^(BOOL success) {
+                NSLog(@"success = %d", success);
             }];
-            [alertCon addAction:setting];
-            [alertCon addAction:ok];
-            //
-            [self presentViewController:alertCon animated:YES completion:nil];
-        }];
-    }else if (status == PHAuthorizationStatusRestricted){
-        NSLog(@"家长控制,不允许访问");
-    }else if (status == PHAuthorizationStatusNotDetermined){
-        NSLog(@"用户还没有做出选择");
-    }else if (status == PHAuthorizationStatusAuthorized){
-        NSLog(@"用户允许当前应用访问相册");
-        [self saveImage:image];
-    }
+        }
+    }];
+    [alertCon addAction:ok];
+    [alertCon addAction:setting];
+    
+    [self presentViewController:alertCon animated:YES completion:nil];
 }
 
 /**

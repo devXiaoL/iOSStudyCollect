@@ -17,9 +17,20 @@
 #import <UserNotifications/UserNotifications.h>
 #endif
 
-#import <React/RCTBundleURLProvider.h>
+//#import <React/RCTBundleURLProvider.h>
+
+#import <FlutterPluginRegistrant/GeneratedPluginRegistrant.h>
+#import "AppDelegate+FlutterBoost.h"
+
+#import "NSObject+Test2.h"
+#import "NSObject+CrashLogHandler.h"
+
+#import "SMLagMonitor.h"
+#import "CrashHandler.h"
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate,JPUSHRegisterDelegate>
+
+@property (nonatomic, assign)UIBackgroundTaskIdentifier backgroundTaskIdentifier;
 
 @end
 
@@ -27,9 +38,28 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    // 测试分类方法调用顺序
+    // NSObject *a = [NSObject new];
+    // [a test];
     
-
-//    [RCTBundleURLProvider sharedSettings].jsLocation = @"127.0.0.1";
+    [self initFlutterBoostWithApplication:application];
+    
+    [[SMLagMonitor shareInstance] beginMonitor];
+    
+    NSDictionary *dict = @{@"1": @"a"};
+    
+    NSString *value = dict[@"2"];
+    
+    [CrashHandler open];
+    
+    
+//    self.flutterEngine = [[FlutterEngine alloc] initWithName:@"my flutter engine"];
+//    // Runs the default Dart entrypoint with a default Flutter route.
+//    [self.flutterEngine run];
+    // Used to connect plugins (only if you have plugins with iOS platform code).
+//    [GeneratedPluginRegistrant registerWithRegistry:self.flutterEngine];
+    
+    //[RCTBundleURLProvider sharedSettings].jsLocation = @"127.0.0.1";
     
     self.window = [[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
@@ -38,22 +68,22 @@
     self.window.rootViewController = tabBar;
     [self.window makeKeyAndVisible];
     
-//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//        [JPUSHService setupWithOption:launchOptions
-//                               appKey:@"dbab963d6f949c7b841463c7"
-//                              channel:@"ios"
-//                     apsForProduction:NO
-//                advertisingIdentifier:nil];
-//        
-//        JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
-//        entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound;
-//        if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
-//            // 可以添加自定义 categories
-//            // NSSet<UNNotificationCategory *> *categories for iOS10 or later
-//            // NSSet<UIUserNotificationCategory *> *categories for iOS8 and iOS9
-//        }
-//        [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
-//    });
+    //    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+    //        [JPUSHService setupWithOption:launchOptions
+    //                               appKey:@"dbab963d6f949c7b841463c7"
+    //                              channel:@"ios"
+    //                     apsForProduction:NO
+    //                advertisingIdentifier:nil];
+    //
+    //        JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
+    //        entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound;
+    //        if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+    //            // 可以添加自定义 categories
+    //            // NSSet<UNNotificationCategory *> *categories for iOS10 or later
+    //            // NSSet<UIUserNotificationCategory *> *categories for iOS8 and iOS9
+    //        }
+    //        [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+    //    });
     
     return YES;
 }
@@ -68,6 +98,9 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    self.backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^( void) {
+        [self backgroundTask];
+    }];
 }
 
 
@@ -79,7 +112,6 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
-
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
@@ -141,6 +173,8 @@
     completionHandler();  // 系统要求执行这个方法
 }
 
-
+- (void)backgroundTask {
+    
+}
 
 @end

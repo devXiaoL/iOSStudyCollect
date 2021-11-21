@@ -7,7 +7,7 @@
 //
 
 #import "XLRNBridgeManager.h"
-#import <React/RCTBundleURLProvider.h>
+//#import <React/RCTBundleURLProvider.h>
 
 @implementation XLRNBridgeManager
 
@@ -20,7 +20,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        _bridge = [[self alloc] initWithDelegate:[BridgeHandler new] launchOptions:nil];
+//        _bridge = [[self alloc] initWithDelegate:[BridgeHandler new] launchOptions:nil];
     });
     return _bridge;
 }
@@ -29,8 +29,8 @@
 
 @implementation BridgeHandler
 
-- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
-    return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
-}
+//- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
+//    return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+//}
 
 @end

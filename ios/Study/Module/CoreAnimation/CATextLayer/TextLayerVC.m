@@ -47,18 +47,20 @@
     
     NSString *text = @"Core Animation提供了一个CALayer的子类CATextLayer，它以图层的形式包含了UILabel几乎所有的绘制特性，并且额外提供了一些新的特性。同样，CATextLayer也要比UILabel渲染得快得多。很少有人知道在iOS 6及之前的版本，UILabel其实是通过WebKit来实现绘制的，这样就造成了当有很多文字的时候就会有极大的性能压力。而CATextLayer使用了Core text，并且渲染得非常快。CATextLayer渲染文本时禁用子像素抗锯齿。只有在光栅化的同时将文本合成到现有的不透明背景中时，才能使用子像素抗锯齿来绘制文本。在将背景像素编织成文本像素之前，无法在子像素抗锯齿中自己绘制文本，无论是图像还是图层。将opacity图层的属性设置为YES不会更改渲染模式。";
     
+    NSString *result = [NSString stringWithFormat:@"index===>%zd===>%@", indexPath.section, text];
+    
     if (self.labelEnable) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
         cell.textLabel.font = [UIFont systemFontOfSize:14];
         cell.textLabel.numberOfLines = 0;
-        cell.textLabel.text = text;
+        cell.textLabel.text = result;
         
         return cell;
     }
     
     TextLayerCell *textLayerCell = [tableView dequeueReusableCellWithIdentifier:@"textLayerCell"];
     
-    [textLayerCell setupText:text];
+    [textLayerCell setupText:result];
     
     return textLayerCell;
 }

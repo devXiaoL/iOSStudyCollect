@@ -32,19 +32,13 @@
         }
     }
     return self;
-
 }
 
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
     NSLog(@"tag = %zd",self.tag);
     BOOL inside = [super pointInside:point withEvent:event];
     CGFloat r = 75;
-    if (inside) {
-        if (powf(point.x - 75, 2.0) + powf(point.y - 75, 2.0) <= powf(r, 2.0)) {
-            return YES;
-        }
-    }
-    return NO;
+    return inside && ((powf(point.x - 75, 2.0) + powf(point.y - 75, 2.0)) <= powf(r, 2.0));
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {

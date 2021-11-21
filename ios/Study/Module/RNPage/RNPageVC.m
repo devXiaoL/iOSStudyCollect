@@ -8,7 +8,7 @@
 
 #import "RNPageVC.h"
 #import "XLRNBridgeManager.h"
-#import <React/RCTRootView.h>
+//#import <React/RCTRootView.h>
 
 @interface RNPageVC ()
 
@@ -16,10 +16,10 @@
 
 @implementation RNPageVC
 
-- (void)loadView {
-    RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:[XLRNBridgeManager sharedManager] moduleName:@"RNPage" initialProperties:nil];
-    self.view = rootView;
-}
+//- (void)loadView {
+//    RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:[XLRNBridgeManager sharedManager] moduleName:@"RNPage" initialProperties:nil];
+//    self.view = rootView;
+//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

@@ -1,0 +1,6 @@
+framework module XLStudyDFDemo {
+  umbrella header "XLStudyDFDemo.h"
+
+  export *
+  module * { export * }
+}

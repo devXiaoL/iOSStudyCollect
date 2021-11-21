@@ -20,7 +20,8 @@ NSInteger const kMAX_COL_l = 3;
     if (self) {
         for (int i = 0; i < kMAX_COL_l * kMAX_COL_l; i++) {
             UIImageView *imageView = [[UIImageView alloc]init];
-            imageView.backgroundColor = [UIColor whiteColor];
+            // 不设置 背景颜色就不会导致离屏渲染
+            // imageView.backgroundColor = [UIColor whiteColor];
             imageView.tag = i;
             [self addSubview:imageView];
         }

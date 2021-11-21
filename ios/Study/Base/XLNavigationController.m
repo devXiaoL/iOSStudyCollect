@@ -17,10 +17,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.navigationBar setBackgroundImage:[UIImage imageNamed:@"topBar_backImage"] forBarMetrics:UIBarMetricsDefault];
-    NSDictionary *attributed = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
-    [self.navigationBar setTitleTextAttributes:attributed];
-    
+    UIImage *image = [UIImage imageNamed:@"topBar_backImage"];
+    NSDictionary *titleAttributed = @{NSForegroundColorAttributeName:[UIColor whiteColor]};
+
+    if (@available(iOS 13.0, *)) {
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        appearance.backgroundImage = image;
+        appearance.titleTextAttributes = titleAttributed;
+        self.navigationBar.standardAppearance = appearance;
+        self.navigationBar.scrollEdgeAppearance = appearance;
+    } else {
+        [self.navigationBar setBackgroundImage:image forBarMetrics:UIBarMetricsDefault];
+        [self.navigationBar setTitleTextAttributes:titleAttributed];
+    }
     self.navigationBar.tintColor = [UIColor whiteColor];
 }
 
@@ -28,15 +37,5 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

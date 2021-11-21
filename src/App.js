@@ -42,9 +42,9 @@ export default class App extends Component {
         console.log(error,errorInfo);
     }
 
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
 
-    }
+    // }
 
     setTest = () => {
         let mySet = new Set([1,2,3,1,4]);
@@ -76,7 +76,7 @@ export default class App extends Component {
 
         return (
             <View style={{...styles.container}}>
-                <Text style={styles.text}> text Rn</Text>
+                <Text style={styles.text}>  Text </Text>
                 <Text style={styles.text}> {this.state.title}</Text>
                 <TouchableOpacity
                     style = {styles.button}

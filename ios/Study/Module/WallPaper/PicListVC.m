@@ -12,11 +12,12 @@
 
 #import "PicBrowseVC.h"
 #import "UIImage+Until.h"
+#import <UIImage+MultiFormat.h>
 
 
 #define kCellIdentifier @"cell"
 
-@interface PicListVC ()<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout,PicBrowseVCDelegate>
+@interface PicListVC ()<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout,PicBrowseVCDelegate, SDWebImageManagerDelegate>
 
 @property (nonatomic, strong)UICollectionView *collectionView;
 
@@ -31,6 +32,7 @@
 
 @property (nonatomic, assign)NSInteger currentIndex;
 @property (nonatomic, strong)PicBrowseVC *vc;
+@property (nonatomic, assign) BOOL isHidden;
 
 @end
 
@@ -60,12 +62,19 @@
     [self layoutPageSubViews];
     
     [self requestPicWithRequestPage:self.requestPage];
+    
+//    [SDWebImageManager sharedManager].delegate = self;
 }
 
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
+    self.isHidden = NO;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.isHidden = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -89,16 +98,21 @@
     
     ImageInfo *info = self.imageInfos[indexPath.item];
     
-    
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
-    
+    cell.contentView.opaque = YES;
     cell.contentView.backgroundColor = [UIColor blackColor];
-    
-    NSUInteger tag = 10;
+    cell.contentView.contentMode = UIViewContentModeScaleAspectFill;
+    cell.contentView.clipsToBounds = YES;
+    cell.contentView.layer.shouldRasterize = YES;
+    NSUInteger tag = 108888;
     UIImageView *imageView = [cell viewWithTag:tag];
     if (!imageView) {
         imageView = [[UIImageView alloc]init];
-        imageView.backgroundColor = [UIColor randomColor];
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.opaque = YES;
+        imageView.clipsToBounds = YES;
+        //imageView.backgroundColor = [UIColor randomColor];
+        imageView.backgroundColor = cell.contentView.backgroundColor;
         imageView.tag = tag;
         [cell.contentView addSubview:imageView];
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -106,7 +120,30 @@
             make.top.left.equalTo(cell.contentView);
         }];
     }
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    
+    NSURL *imageURL = [NSURL URLWithString:info.thumb];
+    NSString *cacheImageKey = [[SDWebImageManager.sharedManager cacheKeyForURL:[NSURL URLWithString:info.thumb]] stringByAppendingString:@"thumb"];
+    UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:cacheImageKey];
+    if (image) {
+        imageView.image = image;
+    } else {
+        [SDWebImageManager.sharedManager loadImageWithURL:imageURL options:0 progress:nil completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+
+            UIImage *newImage = [self imageScaleByImageIO:data size:cell.contentView.bounds.size];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                imageView.image = newImage;
+            });
+
+            [[SDImageCache sharedImageCache] storeImage:newImage forKey:cacheImageKey completion:nil];
+            [[SDImageCache sharedImageCache] removeImageForKey:info.thumb withCompletion:nil];
+        }];
+    }
+    /*
+     [imageView sd_setImageWithURL:[NSURL URLWithString:info.thumb] completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+         NSLog(@"image = %@, cacheType=%zd, imageURL = %@", image, cacheType, imageURL);
+     }];
+     
     //从网络获取图片，添加到imageView上
     NSString *imageStr = info.thumb;
     NSString *cacheImageStr = [imageStr stringByAppendingString:@"cacheImage"];
@@ -114,60 +151,23 @@
     UIImage *image = [[SDImageCache sharedImageCache] imageFromCacheForKey:cacheImageStr];
     
     if (image) {
-        imageView.image = image;
+        //imageView.image = image;
+        cell.contentView.layer.contents = (id)image.CGImage;
     }else{
-        __weak typeof(imageView)weakImageView = imageView;
-        
-        [imageView sd_setImageWithURL:[NSURL URLWithString:imageStr] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-            
-//            //重新绘制image
-            CGSize size = weakImageView.frame.size;
-            UIGraphicsBeginImageContextWithOptions(size, NO, 0);
-            CGPathRef pathRef = [UIBezierPath bezierPathWithRect:weakImageView.bounds].CGPath;
-            // 将创建好的路径对象添加到图形上下文中的当前路径
-            CGContextAddPath(UIGraphicsGetCurrentContext(), pathRef);
-            // 裁剪
-            CGContextClip(UIGraphicsGetCurrentContext());
-            [weakImageView.layer renderInContext:UIGraphicsGetCurrentContext()];
-            UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-//            UIImage *newImage = [image resizedImageWithSize:size];
-            
-            weakImageView.image = newImage;
+        [SDWebImageManager.sharedManager loadImageWithURL:[NSURL URLWithString:imageStr] options:0 progress:nil completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+
+            UIImage *newImage = [self imageScaleByImageIO:data size:cell.contentView.bounds.size];
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //weakImageView.image = newImage;
+                cell.contentView.layer.contents = (id)newImage.CGImage;
+            });
+
             [[SDImageCache sharedImageCache] storeImage:newImage forKey:cacheImageStr completion:nil];
             [[SDImageCache sharedImageCache] removeImageForKey:imageStr withCompletion:nil];
         }];
     }
-    
-    //    __weak __typeof(imageView)weakImageView = imageView;
-    
-    /*
-     __block UIImage *newImage;
-     
-     [imageView sd_setImageWithURL:[NSURL URLWithString:imageStr] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-     newImage = image;
-     
-     //生成圆形imageView
-     //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-     //            CGRect imageFrame = imageView.frame;
-     //            CGFloat radius = MIN(imageFrame.size.width, imageFrame.size.height) / 2;
-     //            CGFloat scale = [UIScreen mainScreen].scale;
-     //            UIGraphicsBeginImageContextWithOptions(imageFrame.size, NO, scale);
-     //            //            CGContextRef currnetContext = UIGraphicsGetCurrentContext();
-     //            CGPathRef cornerRef = [UIBezierPath bezierPathWithRoundedRect:imageFrame cornerRadius:radius].CGPath;
-     
-     //            CGContextAddPath(UIGraphicsGetCurrentContext(), cornerRef);
-     //            CGContextClip(UIGraphicsGetCurrentContext());
-     //            [imageView.layer renderInContext:UIGraphicsGetCurrentContext()];
-     //            newImage = UIGraphicsGetImageFromCurrentImageContext();
-     //            UIGraphicsEndImageContext();
-     //            dispatch_async(dispatch_get_main_queue(), ^{
-     //                imageView.image = newImage;
-     //            });
-     //            //            NSLog(@"newImage p= %p",newImage);
-     //        });
-     }];
-     */
+    */
     return cell;
 }
 
@@ -197,6 +197,18 @@
 - (void)scrollToItemAtIndex:(NSInteger)index{
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:index inSection:0];
     [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+}
+
+#pragma mark - SDWebImageManager
+
+- (UIImage *)imageManager:(SDWebImageManager *)imageManager transformDownloadedImage:(UIImage *)image withURL:(NSURL *)imageURL {
+    if (self.isHidden) {
+        return image;
+    }
+    NSData *data = [image sd_imageDataAsFormat:SDImageFormatUndefined];
+    CGSize size = CGSizeMake(kScreenWidth/2.0 - 1, kScreenWidth/2.0 - 1);
+    UIImage *newImage = [self imageScaleByImageIO:data size:size];
+    return newImage;
 }
 
 #pragma mark - request
@@ -269,6 +281,65 @@
         @strongify(self)
         [self requestPicWithRequestPage:self.requestPage + 1];
     }];
+}
+
+
+- (UIImage *)imageScaleByCoreGraphic:(UIImage *)image size:(CGSize)size {
+    //重新绘制image
+//    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+//    CGPathRef pathRef = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, size.width, size.height)].CGPath;
+//    // 将创建好的路径对象添加到图形上下文中的当前路径
+//    CGContextAddPath(UIGraphicsGetCurrentContext(), pathRef);
+//    // 裁剪
+//    CGContextClip(UIGraphicsGetCurrentContext());
+//    // [weakImageView.layer renderInContext:UIGraphicsGetCurrentContext()];
+//    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    CFRelease(pathRef);
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(context, 0.0, size.height);
+    CGContextScaleCTM(context, 1.0, -1.0);
+    CGContextSetBlendMode(context, kCGBlendModeCopy);
+    CGContextDrawImage(context, CGRectMake(0.0, 0.0, size.width, size.height), image.CGImage);
+    // Retrieve the UIImage from the current context
+    UIImage *imageOut = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    return imageOut;
+}
+
+- (UIImage *)imageScaleByImageIO:(NSData *)imageData size:(CGSize)size {
+    NSDictionary *imageSourceOptions = @{
+        (__bridge NSString *)kCGImageSourceShouldCache: @NO // 原始图像不要解码
+    };
+    CGImageSourceRef imageSource =
+//            CGImageSourceCreateWithURL((__bridge CFURLRef)imageURL, (__bridge CFDictionaryRef)imageSourceOptions);
+    CGImageSourceCreateWithData((__bridge  CFDataRef)imageData, (__bridge CFDictionaryRef)imageSourceOptions);
+    // 下采样
+    CGFloat scale = [UIScreen mainScreen].scale;
+    CGFloat maxDimensionInPixels = MAX(size.width, size.height) * scale;
+    
+    /* CGImageSource的键值说明
+        kCGImageSourceCreateThumbnailWithTransform - 设置缩略图是否进行Transfrom变换
+        kCGImageSourceCreateThumbnailFromImageAlways - 设置是否创建缩略图，无论原图像有没有包含缩略图，默认kCFBooleanFalse，影响 CGImageSourceCreateThumbnailAtIndex 方法
+        kCGImageSourceCreateThumbnailFromImageIfAbsent - 设置是否创建缩略图，如果原图像有没有包含缩略图，则创建缩略图，默认kCFBooleanFalse，影响 CGImageSourceCreateThumbnailAtIndex 方法
+        kCGImageSourceThumbnailMaxPixelSize - 设置缩略图的最大宽/高尺寸 需要设置为CFNumber值，设置后图片会根据最大宽/高 来等比例缩放图片
+        kCGImageSourceShouldCache - 设置是否以解码的方式读取图片数据 默认为kCFBooleanTrue，如果设置为true，在读取数据时就进行解码 如果为false 则在渲染时才进行解码 */
+    NSDictionary *downsampleOptions =
+    @{
+      (__bridge NSString *)kCGImageSourceCreateThumbnailFromImageAlways: @YES,
+      (__bridge NSString *)kCGImageSourceShouldCacheImmediately: @YES,  // 缩小图像的同时进行解码
+      (__bridge NSString *)kCGImageSourceCreateThumbnailWithTransform: @YES,
+      (__bridge NSString *)kCGImageSourceThumbnailMaxPixelSize: @(maxDimensionInPixels)
+       };
+    CGImageRef downsampledImage =
+    CGImageSourceCreateThumbnailAtIndex(imageSource, 0, (__bridge CFDictionaryRef)downsampleOptions);
+    UIImage *newImage = [[UIImage alloc] initWithCGImage:downsampledImage scale:scale orientation:UIImageOrientationUp];
+    CGImageRelease(downsampledImage);
+    CFRelease(imageSource);
+    return newImage;
 }
 
 

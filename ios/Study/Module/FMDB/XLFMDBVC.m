@@ -18,22 +18,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+
     NSString *path = [[NSBundle mainBundle] pathForResource:@"ci" ofType:@"db"];
     FMDatabase *dataBase = [FMDatabase databaseWithPath:path];
     [dataBase open];
-    if ([dataBase open]) {
-        NSString *query = @"select * from ci";
-        FMResultSet *result = [dataBase executeQuery:query];
-        
-        [dataBase executeStatements:query withResultBlock:^int(NSDictionary * _Nonnull resultsDictionary) {
-            NSLog(@"%@", resultsDictionary);
-            return 0;
-        }];
-    }
     
-    [dataBase close];
-    
-    
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        if ([dataBase open]) {
+            NSString *query = @"select * from ci";
+            FMResultSet *result = [dataBase executeQuery:query];
+            
+            [dataBase executeStatements:query withResultBlock:^int(NSDictionary * _Nonnull resultsDictionary) {
+                NSLog(@"%@", resultsDictionary[@"value"]);
+                NSLog(@"%@", resultsDictionary[@"author"]);
+                NSLog(@"%@", resultsDictionary[@"content"]);
+                NSLog(@"%@", resultsDictionary[@"rhythmic"]);
+                NSLog(@"-----------------------------------");
+                return 0;
+            }];
+            [dataBase close];
+        }
+    });
 }
 
 

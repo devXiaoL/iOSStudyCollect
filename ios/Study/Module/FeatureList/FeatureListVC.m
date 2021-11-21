@@ -22,8 +22,8 @@
 @property (nonatomic, strong)UIButton *testEmptyButton;
 
 @property (nonatomic, copy) NSArray *listModels;
-@property (nonatomic, assign)BOOL empty;
-
+@property (nonatomic, assign) BOOL empty;
+ 
 @end
 
 @implementation FeatureListVC
@@ -46,7 +46,7 @@
 #pragma mark - tableView
 
 - (NSInteger )tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return self.listModels.count;
+    return self.empty ? 0 : self.listModels.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -154,13 +154,15 @@
 - (UIButton *)testEmptyButton{
     if (!_testEmptyButton) {
         _testEmptyButton = [[UIButton alloc]init];
-        _testEmptyButton.frame = CGRectMake(self.view.mj_w - 130, 10, 100, 20);
+        _testEmptyButton.frame = CGRectMake(self.view.mj_w - 130, 10, 100, 40);
+        _testEmptyButton.layer.cornerRadius = 20;
+        [_testEmptyButton.layer masksToBounds];
         _testEmptyButton.titleLabel.font = [UIFont systemFontOfSize:12];
         _testEmptyButton.alpha = 0.5;
         _testEmptyButton.backgroundColor = [UIColor orangeColor];
         [_testEmptyButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [_testEmptyButton setTitle:@"点击测试列表为空" forState:UIControlStateNormal];
-        [_testEmptyButton setTitle:@"点击恢复列表数据" forState:UIControlStateSelected];
+        [_testEmptyButton setTitle:@"测试列表为空" forState:UIControlStateNormal];
+        [_testEmptyButton setTitle:@"恢复列表数据" forState:UIControlStateSelected];
         [_testEmptyButton addTarget:self action:@selector(didClickEmptyTestBtn:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _testEmptyButton;
